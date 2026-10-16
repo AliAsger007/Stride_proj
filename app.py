@@ -23,7 +23,7 @@ HOLD_MIN, HOURS = 15, [f"{h:02d}:00" for h in range(9, 18)]
 EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 LIVE = "('pending','confirmed','completed')"
 
-def money(c): return "Free" if not c else f"${c/100:g}"
+def money(c): return "Free" if not c else f"₹{c/100:g}"
 app.jinja_env.filters["money"] = money
 
 # ---------- db ----------
