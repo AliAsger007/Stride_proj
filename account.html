@@ -1,0 +1,14 @@
+{% extends "base.html" %}{% block t %}My account | Stride{% endblock %}
+{% block body %}<h2>Hi, {{ user.name.split()[0] }}</h2><p class=mut>Manage your sessions and details.</p><br>
+{% if request.args.get('paid') %}<p class=note>Payment received. Your booking is confirmed once Stripe notifies us (usually seconds).</p>{% endif %}
+<div class=row><h3>Upcoming sessions</h3><a class=btn href="/#book">Book a session</a></div>
+<div class=w><table><tr><th>Date<th>Time<th>Service<th>Status<th></tr>
+{% for b in upcoming %}<tr><td>{{b.day}}<td>{{b.slot}}<td>{{b.sname}}<td><span class="badge {{b.status}}">{{b.status}}</span>
+<td><form method=post action="/account/cancel/{{b.id}}" onsubmit="return confirm('Cancel this session?')"><input type=hidden name=_t value="{{ csrf() }}"><button class=sm>Cancel</button></form></tr>
+{% else %}<tr><td colspan=5 class=mut>Nothing booked yet.</tr>{% endfor %}</table></div><br>
+<h3>History</h3><div class=w><table><tr><th>Date<th>Time<th>Service<th>Status</tr>
+{% for b in history %}<tr><td>{{b.day}}<td>{{b.slot}}<td>{{b.sname}}<td><span class="badge {{b.status}}">{{b.status}}</span></tr>{% else %}<tr><td colspan=4 class=mut>No past sessions.</tr>{% endfor %}</table></div><br>
+<div class=grid><form method=post action="/account/profile" class=card><h3>Profile</h3><input type=hidden name=_t value="{{ csrf() }}">
+<label>Name</label><input name=name value="{{user.name}}" required><label>Phone</label><input name=phone value="{{user.phone}}"><label>Email (login)</label><input value="{{user.email}}" disabled><br><br><button class=btn>Save</button></form>
+<form method=post action="/account/password" class=card><h3>Change password</h3><input type=hidden name=_t value="{{ csrf() }}">
+<label>Current password</label><input name=old type=password required><label>New password</label><input name=new type=password minlength=8 required><br><br><button class=btn>Update</button></form></div>{% endblock %}

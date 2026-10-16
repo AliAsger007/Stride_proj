@@ -1,0 +1,48 @@
+<!doctype html><html lang=en><head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1"><title>Stride | Coaching that moves with you</title>
+<meta name=description content="Personal coaching and mobility sessions. Book your slot in 30 seconds.">
+<link rel=stylesheet href="{{ url_for('static', filename='style.css') }}"></head><body>
+<nav><div class=wrap><a class=logo href="#">stride<b>.</b></a><button id=burger aria-label=Menu>&#9776;</button>
+<div class=links id=links><a href="#services">Services</a><a href="#proof">Results</a><a href="#faq">FAQ</a><a href="#contact">Contact</a>{% if user %}<a href="/account">My account</a>{% if user.role=='admin' %}<a href="/admin">Admin</a>{% endif %}<a href="/logout">Log out</a>{% else %}<a href="/login">Log in</a>{% endif %}<a class=btn href="#book">Book now</a></div></div></nav>
+
+<header class=hero><div class="blob b1"></div><div class="blob b2"></div><div class=wrap>
+<div class=pill><i></i>Slots open this week</div>
+<h1>Coaching that <span>moves</span><br>with your life.</h1>
+<p class=sub>Personal training and mobility sessions for busy people. Pick a time, show up, feel the difference.</p>
+<div class=cta><a class=btn href="#book">Book a free call</a><a class="btn ghost" href="#services">See services</a></div>
+<div class=stats><div><b data-n=1200 data-s="+">0</b><span>sessions delivered</span></div>
+<div><b data-n=98 data-s="%">0</b><span>client retention</span></div><div><b data-n=7 data-s=" yrs">0</b><span>coaching experience</span></div></div>
+</div></header>
+
+<div class=marq><marquee><div><span>Strength</span><span>Mobility</span><span>Posture</span><span>Recovery</span><span>Endurance</span><span>Confidence</span>
+<span>Strength</span><span>Mobility</span><span>Posture</span><span>Recovery</span><span>Endurance</span><span>Confidence</span></div></marquee></div>
+
+<section id=services><div class=wrap><h2 class=rv>Simple plans. Real results.</h2><p class="lead rv">No contracts. Pay per session and book only when it suits you.</p>
+<div class=grid>{% for s in services %}<div class="card rv {{'f' if s.featured}}">{% if s.featured %}<span class=tag>Popular</span>{% endif %}
+<h3>{{s.name}}</h3><div class=price>{{s.price}}</div><small>{{s.dur}}</small><p style="color:var(--mut);margin:14px 0 22px">{{s.desc}}</p>
+<a class="btn ghost book-link" href="#book" data-svc="{{s.id}}">Choose</a></div>{% endfor %}</div></div></section>
+
+<section id=proof><div class=wrap><h2 class=rv>People feel it fast.</h2><p class="lead rv">A few words from clients.</p>
+<div class=grid><div class="card q rv">"Back pain gone in six weeks. I wish I'd started years ago."<em>Priya, designer</em></div>
+<div class="card q rv">"Booking takes seconds and every session is worth it."<em>Marco, founder</em></div>
+<div class="card q rv">"Finally a coach who adapts to my schedule, not the other way round."<em>Aisha, surgeon</em></div></div></div></section>
+
+<section id=book><div class=wrap><h2 class=rv>Book your session</h2><p class="lead rv">Live availability. Instant confirmation.</p>{% if not user %}<p class="rv" style="margin:-24px 0 24px"><a class=btn href="/register">Create a free account</a> &nbsp;or&nbsp; <a href="/login" style="color:var(--ac)">log in</a> to book.</p>{% endif %}
+<div class="book rv"><div><label>Service</label><select id=svc>{% for s in services %}<option value="{{s.id}}">{{s.name}} ({{s.price}})</option>{% endfor %}</select>
+<label>Date</label><input type=date id=day min="{{today}}" max="{{maxd}}"><label>Available times</label><div id=slots><small style="color:var(--mut)">Pick a date first</small></div></div>
+<div><label>Your name</label><input id=name autocomplete=name value="{{ user.name if user }}"><label>Email</label><input id=email type=email autocomplete=email value="{{ user.email if user }}">
+<label>Anything we should know? (optional)</label><textarea id=note rows=3></textarea><br><br>
+<button class=btn id=go style="width:100%">Confirm booking</button><div id=msg></div></div></div></div></section>
+
+<section id=faq><div class=wrap><h2 class=rv>Questions</h2><br>
+<details class=rv><summary>Do I need experience?</summary><p>None. Every plan is adapted to your level.</p></details>
+<details class=rv><summary>Can I reschedule?</summary><p>Yes. Reply to your confirmation at least 12 hours before.</p></details>
+<details class=rv><summary>Where do sessions happen?</summary><p>At our studio or online, whichever you prefer.</p></details></div></section>
+
+<section id=contact><div class=wrap><h2 class=rv>Get in touch</h2><p class="lead rv">Questions before booking? Send us a message.</p>
+{% for m in get_flashed_messages() %}<p class=ok style="padding:12px;border-radius:12px;margin-bottom:16px">{{m}}</p>{% endfor %}
+<form method=post action="/contact" class="card rv" style="max-width:560px"><input type=hidden name=_t value="{{ csrf() }}">
+<label>Name</label><input name=name required><label>Email</label><input name=email type=email required><label>Message</label><textarea name=body rows=4 required></textarea><br><br><button class=btn>Send message</button></form></div></section>
+<footer>&copy; <span id=yr></span> Stride. Built with Flask.</footer>
+
+<script src="{{ url_for('static', filename='app.js') }}"></script></body></html>

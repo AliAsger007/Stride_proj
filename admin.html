@@ -1,0 +1,29 @@
+{% extends "base.html" %}{% block t %}Admin | Stride{% endblock %}
+{% macro tok() %}<input type=hidden name=_t value="{{ csrf() }}">{% endmacro %}
+{% block body %}<div class=tabs>{% for k,l in [('dash','Dashboard'),('bookings','Bookings'),('services','Services'),('users','Users'),('messages','Messages')] %}<a href="/admin/{{k}}" class="{{'on' if view==k}}">{{l}}</a>{% endfor %}</div>
+
+{% if view=='dash' %}<div class=grid>
+<div class=card><span class=mut>Clients</span><div class=price>{{users}}</div></div><div class=card><span class=mut>Upcoming sessions</span><div class=price>{{upcoming}}</div></div>
+<div class=card><span class=mut>Revenue (booked)</span><div class=price>{{ revenue|money }}</div></div><div class=card><span class=mut>Unread messages</span><div class=price>{{unread}}</div></div></div><br>
+<h3>Next sessions</h3><div class=w><table><tr><th>Date<th>Time<th>Client<th>Email</tr>{% for b in next %}<tr><td>{{b.day}}<td>{{b.slot}}<td>{{b.name}}<td>{{b.email}}</tr>{% else %}<tr><td colspan=4 class=mut>None scheduled.</tr>{% endfor %}</table></div>
+
+{% elif view=='bookings' %}<div class=row><h3>All bookings</h3><div>{% for s in ['','pending','confirmed','completed','cancelled'] %}<a class="chip {{'on' if st==s}}" href="?status={{s}}">{{s or 'all'}}</a>{% endfor %}</div></div>
+<div class=w><table><tr><th>Date<th>Time<th>Client<th>Service<th>Status<th>Actions</tr>
+{% for b in rows %}<tr><td>{{b.day}}<td>{{b.slot}}<td>{{b.name}}<br><small class=mut>{{b.email}}</small><td>{{b.sname}}<td><span class="badge {{b.status}}">{{b.status}}</span>
+<td><form method=post action="/admin/booking/{{b.id}}" class=inl>{{ tok() }}<select name=action><option value=confirmed>Confirm<option value=completed>Complete<option value=cancelled>Cancel<option value=delete>Delete</select><button class=sm>Go</button></form></tr>
+{% else %}<tr><td colspan=6 class=mut>No bookings.</tr>{% endfor %}</table></div>
+
+{% elif view=='services' %}<h3>Services</h3><p class=mut>Edit prices and descriptions. Changes appear on the site instantly.</p><br>
+{% for s in rows %}<form method=post action="/admin/service" class="card sv">{{ tok() }}<input type=hidden name=id value="{{s.id}}">
+<input name=name value="{{s.name}}" required><input name=dur value="{{s.dur}}" placeholder="60 min"><input name=price type=number step=0.01 min=0 value="{{ '%g' % (s.price_cents/100) }}">
+<input name=descr value="{{s.descr}}"><label class=ck><input type=checkbox name=featured {{'checked' if s.featured}}>Popular</label><label class=ck><input type=checkbox name=active {{'checked' if s.active}}>Visible</label>
+<button class=sm>Save</button><button class="sm dg" name=action value=delete onclick="return confirm('Delete service?')">Delete</button></form>{% endfor %}
+<form method=post action="/admin/service" class="card sv">{{ tok() }}<strong>Add new</strong><input name=name placeholder="Name" required><input name=dur placeholder="60 min"><input name=price type=number step=0.01 min=0 placeholder="Price" required><input name=descr placeholder="Description"><button class=sm>Add</button></form>
+
+{% elif view=='users' %}<h3>Users</h3><div class=w><table><tr><th>Name<th>Email<th>Role<th>Bookings<th>Joined<th></tr>
+{% for u in rows %}<tr><td>{{u.name}}<td>{{u.email}}<td><span class="badge {{u.role}}">{{u.role}}</span><td>{{u.nb}}<td>{{u.created[:10]}}
+<td>{% if u.id!=user.id %}<form method=post action="/admin/user/{{u.id}}" class=inl>{{ tok() }}<select name=action><option value=admin>Make admin<option value=user>Make user<option value=delete>Delete</select><button class=sm>Go</button></form>{% endif %}</tr>{% endfor %}</table></div>
+
+{% else %}<h3>Messages</h3>{% for m in rows %}<div class=card style="margin-bottom:14px;{{'' if m.is_read else 'border-color:var(--ac)'}}"><strong>{{m.name}}</strong> <a href="mailto:{{m.email}}" class=mut>{{m.email}}</a> <small class=mut>{{m.created[:16]}}</small><p style="margin:10px 0">{{m.body}}</p>
+<form method=post action="/admin/message/{{m.id}}" class=inl>{{ tok() }}{% if not m.is_read %}<button class=sm name=action value=read>Mark read</button>{% endif %}<button class="sm dg" name=action value=delete>Delete</button></form></div>
+{% else %}<p class=mut>No messages yet.</p>{% endfor %}{% endif %}{% endblock %}
