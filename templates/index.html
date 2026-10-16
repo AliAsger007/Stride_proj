@@ -43,6 +43,6 @@
 {% for m in get_flashed_messages() %}<p class=ok style="padding:12px;border-radius:12px;margin-bottom:16px">{{m}}</p>{% endfor %}
 <form method=post action="/contact" class="card rv" style="max-width:560px"><input type=hidden name=_t value="{{ csrf() }}">
 <label>Name</label><input name=name required><label>Email</label><input name=email type=email required><label>Message</label><textarea name=body rows=4 required></textarea><br><br><button class=btn>Send message</button></form></div></section>
-<footer>&copy; <span id=yr></span> Stride. Built by Ali.</footer>
+<footer>&copy; <span id=yr></span> Stride. Manage by Ali.</footer>
 
 <script src="{{ url_for('static', filename='app.js') }}"></script></body></html>
