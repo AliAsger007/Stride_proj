@@ -1,5 +1,5 @@
 <!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1">
-<title>{% block t %}Stride{% endblock %}</title><link rel=stylesheet href="{{ url_for('static', filename='style.css') }}"></head><body>
-<nav><div class=wrap><a class=logo href="/">stride<b>.</b></a><button id=burger aria-label=Menu onclick="document.getElementById('links').classList.toggle('open')">&#9776;</button>
+<title>{% block t %}Stride{% endblock %}</title><link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}"><link rel="icon" type="image/png" sizes="512x512" href="{{ url_for('static', filename='stride-icon.png') }}"><link rel="apple-touch-icon" href="{{ url_for('static', filename='stride-icon.png') }}"><link rel=stylesheet href="{{ url_for('static', filename='style.css') }}"></head><body>
+<nav><div class=wrap><a class=logo href="/"><img class=lg src="{{ url_for('static', filename='stride-logo.png') }}" alt="Stride" width=198 height=52></a><button id=burger aria-label=Menu onclick="document.getElementById('links').classList.toggle('open')">&#9776;</button>
 <div class=links id=links><a href="/">Home</a>{% if user %}<a href="/account">My account</a>{% if user.role=='admin' %}<a href="/admin">Admin</a>{% endif %}<a href="/logout">Log out</a>{% else %}<a href="/login">Log in</a><a class=btn href="/register">Sign up</a>{% endif %}</div></div></nav>
 <main class="wrap pg">{% for m in get_flashed_messages() %}<p class="note">{{m}}</p>{% endfor %}{% block body %}{% endblock %}</main></body></html>
