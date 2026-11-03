@@ -1,0 +1,55 @@
+<!doctype html><html lang=en><head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1"><title>Stride | Coaching that moves with you</title>
+<meta name=description content="Personal coaching and mobility sessions. Book your slot in 30 seconds.">
+<link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}"><link rel="icon" type="image/png" sizes="512x512" href="{{ url_for('static', filename='stride-icon.png') }}"><link rel="apple-touch-icon" href="{{ url_for('static', filename='stride-icon.png') }}"><link rel=stylesheet href="{{ url_for('static', filename='style.css') }}"></head><body>
+<nav><div class=wrap><a class=logo href="#"><img class=lg src="{{ url_for('static', filename='stride-logo.png') }}" alt="Stride" width=198 height=52></a><button id=burger aria-label=Menu>&#9776;</button>
+<div class=links id=links><a href="#services">Services</a><a href="#proof">Results</a><a href="#faq">FAQ</a><a href="#contact">Contact</a>{% if user %}<a href="/account">My account</a>{% if user.role=='admin' %}<a href="/admin">Admin</a>{% endif %}<details class=profile-menu><summary><span class=avatar>{{user.name[:1]|upper}}</span><span class=profile-name>{{user.name}}</span></summary><div class=profile-pop><a href="/account">My Account</a><a href="/account#dashboard">Dashboard</a><a href="/membership">Membership</a><a href="/account#history">Booking history</a><a href="/logout">Logout</a></div></details>{% else %}<a href="/login">Log in</a>{% endif %}<a class=btn href="#book">Book now</a></div></div></nav>
+
+<header class=hero><div class="blob b1"></div><div class="blob b2"></div><div class=wrap>
+<div class=pill><i></i>Slots open this week</div>
+<h1>Coaching that <span>moves</span><br>with your life.</h1>
+<p class=sub>Personal training and mobility sessions for busy people. Pick a time, show up, feel the difference.</p>
+<div class=cta><a class=btn href="#book">Book a free call</a><a class="btn ghost" href="#services">See services</a></div>
+<div class=stats><div><b>{{content.sessions_delivered}}</b><span>sessions delivered</span></div>
+<div><b>{{content.client_retention}}</b><span>client retention</span></div><div><b>{{content.client_experience}}</b><span>client experience</span></div></div>
+</div></header>
+
+<section id=gym-info><div class="wrap"><div class="split-info"><div><p class="eyebrow">Inside {{content.gym_name}}</p><h2 class=rv>{{content.gym_name}}<br><span class=accent>built for real life.</span></h2><p class="lead rv">{{content.gym_description}}</p><div class="info-meta rv"><div><strong>Visit us</strong><span>{{content.gym_address}}</span>{% if content.gym_map_url %}<a href="{{content.gym_map_url}}" target="_blank" rel="noopener">Open map →</a>{% endif %}</div><div><strong>Hours</strong><span>{{content.gym_hours}}</span></div><div><strong>Contact</strong><span>{{content.gym_phone or content.gym_email}}</span></div></div></div><div class="card info-card rv"><p class=eyebrow>What we offer</p><h3>Space to move.<br>Support to grow.</h3><ul class=clean-list>{% for item in content.facilities_list %}<li>{{item}}</li>{% else %}<li>Thoughtful coaching for every body</li>{% endfor %}</ul></div></div></div></section>
+
+<div class=marq><marquee><div><span>Strength</span><span>Mobility</span><span>Posture</span><span>Recovery</span><span>Endurance</span><span>Confidence</span>
+<span>Strength</span><span>Mobility</span><span>Posture</span><span>Recovery</span><span>Endurance</span><span>Confidence</span></div></marquee></div>
+
+<section id=services><div class=wrap><h2 class=rv>Simple plans. Real results.</h2><p class="lead rv">No contracts. Pay per session and book only when it suits you.</p>
+<div class=grid>{% for s in services %}<div class="card rv {{'f' if s.featured}}">{% if s.featured %}<span class=tag>Popular</span>{% endif %}
+<h3>{{s.name}}</h3><div class=price>{{s.price}}</div><small>{{s.dur}}</small><p style="color:var(--mut);margin:14px 0 22px">{{s.desc}}</p>
+<a class="btn ghost book-link" href="#book" data-svc="{{s.id}}">Choose</a></div>{% endfor %}</div></div></section>
+
+<section id=proof><div class=wrap><h2 class=rv>People feel it fast.</h2><p class="lead rv">A few words from clients.</p>
+<div class=grid><div class="card q rv">"Back pain gone in six weeks. I wish I'd started years ago."<em>Priya, designer</em></div>
+<div class="card q rv">"Booking takes seconds and every session is worth it."<em>Marco, founder</em></div>
+<div class="card q rv">"Finally a coach who adapts to my schedule, not the other way round."<em>Aisha, surgeon</em></div></div></div></section>
+
+<section id=achievements><div class=wrap><p class=eyebrow>Our track record</p><h2 class=rv>Progress worth<br><span class=accent>celebrating.</span></h2><div class="grid achievement-grid">{% for a in achievements %}<div class="card rv"><span class=achievement-year>{{a.year}}</span><h3>{{a.title}}</h3><p>{{a.description}}</p></div>{% else %}<div class="card rv"><h3>Built on consistency</h3><p>Our achievements will appear here as the studio grows.</p></div>{% endfor %}</div></div></section>
+<section id=owner><div class=wrap><div class="owner-card card rv">{% if content.owner_image %}<img class=owner-photo src="{{content.owner_image}}" alt="{{content.owner_name}}">{% else %}<div class=owner-placeholder>{{content.owner_name[:1]}}</div>{% endif %}<div><p class=eyebrow>Meet the owner</p><h2>{{content.owner_name}}</h2><p class=lead>{{content.owner_bio}}</p>{% if content.gym_email %}<a class="btn ghost" href="mailto:{{content.gym_email}}">Talk to us</a>{% endif %}</div></div></div></section>
+
+{% if user %}<section id=trainers><div class=wrap><p class=eyebrow>Your coaching team</p><h2 class=rv>Meet the people<br><span class=accent>in your corner.</span></h2><p class=lead rv>Explore the trainers added by the Stride Pro team and send a private message when you need guidance.</p><div class="grid trainer-grid">{% for t in trainers %}<article class="card trainer-card rv">{% if t.image %}<img class=trainer-photo src="{{t.image}}" alt="{{t.name}}">{% else %}<div class=trainer-placeholder>{{t.name[:1]}}</div>{% endif %}<div class=trainer-copy><h3>{{t.name}}</h3>{% if t.specialization %}<p class=trainer-specialty>{{t.specialization}}</p>{% endif %}<p class=mut>{{t.bio}}</p><div class=trainer-meta>{% if t.experience %}<span>{{t.experience}}</span>{% endif %}{% if t.availability %}<span>{{t.availability}}</span>{% endif %}</div>{% if t.certifications %}<small>Certifications: {{t.certifications}}</small>{% endif %}{% if t.programs %}<small>Programs: {{t.programs}}</small>{% endif %}</div></article>{% else %}<div class="card empty-state rv"><h3>Trainer profiles coming soon</h3><p class=mut>The gym team is preparing trainer profiles for members.</p></div>{% endfor %}</div><div class="card contact-card rv"><div><p class=eyebrow>Need help?</p><h3>Message a trainer or the owner.</h3><p class=mut>Your message is private and linked to your account.</p></div><form method=post action="/contact/trainer" class=contact-form>{{ csrf() }}<label>Contact</label><select name=recipient><option value=owner>Gym owner — {{content.owner_name}}</option>{% for t in trainers %}<option value=trainer>Trainer — {{t.name}}</option>{% endfor %}</select><label>Trainer (when selected above)</label><select name=trainer_id><option value="">Select a trainer</option>{% for t in trainers %}<option value="{{t.id}}">{{t.name}}</option>{% endfor %}</select><label>Subject</label><input name=subject maxlength=160 required><label>Message</label><textarea name=body rows=4 maxlength=2000 required></textarea><button class=btn>Send message</button></form></div></div></section>{% endif %}
+
+<section id=book><div class=wrap><h2 class=rv>Book your session</h2><p class="lead rv">Live availability. Instant confirmation.</p>{% if not user %}<p class="rv" style="margin:-24px 0 24px"><a class=btn href="/register">Create a free account</a> &nbsp;or&nbsp; <a href="/login" style="color:var(--ac)">log in</a> to book.</p>{% endif %}
+<div class="book rv"><div><label>Service</label><select id=svc>{% for s in services %}<option value="{{s.id}}">{{s.name}} ({{s.price}})</option>{% endfor %}</select>
+<label>Date</label><input type=date id=day min="{{today}}" max="{{maxd}}"><label>Available times</label><div id=slots><small style="color:var(--mut)">Pick a date first</small></div></div>
+<div><label>Your name</label><input id=name autocomplete=name value="{{ user.name if user }}"><label>Email</label><input id=email type=email autocomplete=email value="{{ user.email if user }}">
+<label>Anything we should know? (optional)</label><textarea id=note rows=3></textarea><br><br>
+<button class=btn id=go style="width:100%">Confirm booking</button><div id=msg></div></div></div></div></section>
+
+<section id=faq><div class=wrap><h2 class=rv>Questions</h2><br>
+<details class=rv><summary>Do I need experience?</summary><p>None. Every plan is adapted to your level.</p></details>
+<details class=rv><summary>Can I reschedule?</summary><p>Yes. Reply to your confirmation at least 12 hours before.</p></details>
+<details class=rv><summary>Where do sessions happen?</summary><p>At our studio or online, whichever you prefer.</p></details></div></section>
+
+<section id=contact><div class=wrap><h2 class=rv>Get in touch</h2><p class="lead rv">Questions before booking? Send us a message.</p>
+{% for m in get_flashed_messages() %}<p class=ok style="padding:12px;border-radius:12px;margin-bottom:16px">{{m}}</p>{% endfor %}
+<form method=post action="/contact" class="card rv" style="max-width:560px"><input type=hidden name=_t value="{{ csrf() }}">
+<label>Name</label><input name=name required><label>Email</label><input name=email type=email required><label>Message</label><textarea name=body rows=4 required></textarea><br><br><button class=btn>Send message</button></form></div></section>
+<footer><img src="{{ url_for('static', filename='stride-logo.png') }}" alt="Stride" width=217 height=57 style="display:block;margin:0 auto 14px;height:57px;width:auto">&copy; <span id=yr></span> Stride. Built by Ali.</footer>
+
+<script src="{{ url_for('static', filename='app.js') }}"></script></body></html>
