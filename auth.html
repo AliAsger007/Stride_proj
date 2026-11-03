@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% block t %}{{ 'Create account' if mode=='register' else 'Log in' }} | Stride{% endblock %}
+{% block body %}<form method=post class="card fm"><h2>{{ 'Create your account' if mode=='register' else 'Welcome back' }}</h2>
+<input type=hidden name=_t value="{{ csrf() }}">
+{% if mode=='register' %}<label>Full name</label><input name=name required>{% endif %}
+<label>Email</label><input name=email type=email required><label>Password{% if mode=='register' %} (8+ characters){% endif %}</label><input name=password type=password required minlength=8>
+<br><br><button class=btn style="width:100%">{{ 'Sign up' if mode=='register' else 'Log in' }}</button>
+<p class=mut style="margin-top:16px">{% if mode=='register' %}Have an account? <a href="/login">Log in</a>{% else %}New here? <a href="/register">Create an account</a>{% endif %}</p></form>{% endblock %}
